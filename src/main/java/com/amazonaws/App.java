@@ -3,8 +3,8 @@ package com.amazonaws;
 import java.util.HashMap;
 import java.util.Map;
 
-//import com.amazonaws.AmazonClientException;
-//import com.amazonaws.AmazonServiceException;
+import com.amazonaws.AmazonClientException;
+import com.amazonaws.AmazonServiceException;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.regions.Region;
@@ -56,7 +56,7 @@ public class App {
      * optional ClientConfiguration object when constructing a client.
      *
      * @see com.amazonaws.auth.BasicAWSCredentials
-     * @see com.amazonaws.auth.ProfilesConfigFile
+     *
      * @see com.amazonaws.ClientConfiguration
      */
     private static void init() throws Exception {
@@ -84,7 +84,7 @@ public class App {
         init();
 
         try {
-            String tableName = "my-favorite-movies-table";
+            String tableName = "children";
 
             // Create a table with a primary hash key named 'name', which holds a string
             CreateTableRequest createTableRequest = new CreateTableRequest().withTableName(tableName)
@@ -103,23 +103,22 @@ public class App {
             System.out.println("Table Description: " + tableDescription);
 
             // Add an item
-            Map<String, AttributeValue> item = newItem("Bill & Ted's Excellent Adventure", 1989, "****", "James", "Sara");
+            Map<String, AttributeValue> item = newItem("Vitalii Ielakov", "15:00");
             PutItemRequest putItemRequest = new PutItemRequest(tableName, item);
             PutItemResult putItemResult = dynamoDB.putItem(putItemRequest);
             System.out.println("Result: " + putItemResult);
 
             // Add another item
-            item = newItem("Airplane", 1980, "*****", "James", "Billy Bob");
+            item = newItem("Kopytsia Andrii", "10:30");
             putItemRequest = new PutItemRequest(tableName, item);
             putItemResult = dynamoDB.putItem(putItemRequest);
             System.out.println("Result: " + putItemResult);
 
-            // Scan items for movies with a year attribute greater than 1985
             HashMap<String, Condition> scanFilter = new HashMap<String, Condition>();
             Condition condition = new Condition()
-                    .withComparisonOperator(ComparisonOperator.GT.toString())
-                    .withAttributeValueList(new AttributeValue().withN("1985"));
-            scanFilter.put("year", condition);
+                    .withComparisonOperator(ComparisonOperator.EQ)
+                    .withAttributeValueList(new AttributeValue().withS("Vitalii Ielakov"));
+            scanFilter.put("name", condition);
             ScanRequest scanRequest = new ScanRequest(tableName).withScanFilter(scanFilter);
             ScanResult scanResult = dynamoDB.scan(scanRequest);
             System.out.println("Result: " + scanResult);
@@ -140,12 +139,10 @@ public class App {
         }
     }
 
-    private static Map<String, AttributeValue> newItem(String name, int year, String rating, String... fans) {
+    private static Map<String, AttributeValue> newItem(String name, String data) {
         Map<String, AttributeValue> item = new HashMap<String, AttributeValue>();
         item.put("name", new AttributeValue(name));
-        item.put("year", new AttributeValue().withN(Integer.toString(year)));
-        item.put("rating", new AttributeValue(rating));
-        item.put("fans", new AttributeValue().withSS(fans));
+        item.put("data", new AttributeValue(data));
 
         return item;
     }
