@@ -84,7 +84,7 @@ public class App {
         init();
 
         try {
-            String tableName = "children1";
+            String tableName = "children";
             String KidName = args[0];
             String KidTime = args[1];
             // Create a table with a primary hash key named 'name', which holds a string
