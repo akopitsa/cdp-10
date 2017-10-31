@@ -116,11 +116,12 @@ public class App {
             //System.out.println("Result: " + putItemResult);
 
             // Add another item
-            item = newItem(KidName, KidTime);
-            putItemRequest = new PutItemRequest(tableName, item);
-            putItemResult = dynamoDB.putItem(putItemRequest);
-            System.out.println("Result: " + putItemResult);
-
+            if(KidName.length() != 0 && KidTime.length() != 0) {
+                item = newItem(KidName, KidTime);
+                putItemRequest = new PutItemRequest(tableName, item);
+                putItemResult = dynamoDB.putItem(putItemRequest);
+                System.out.println("Result: " + putItemResult);
+            }
             HashMap<String, Condition> scanFilter = new HashMap<String, Condition>();
             Condition condition = new Condition()
                     .withComparisonOperator(ComparisonOperator.EQ)
