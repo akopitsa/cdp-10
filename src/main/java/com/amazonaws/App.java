@@ -84,8 +84,9 @@ public class App {
         init();
 
         try {
-            String tableName = "children";
-
+            String tableName = "children1";
+            String KidName = args[0];
+            String KidTime = args[1];
             // Create a table with a primary hash key named 'name', which holds a string
             CreateTableRequest createTableRequest = new CreateTableRequest().withTableName(tableName)
                     .withKeySchema(new KeySchemaElement().withAttributeName("name").withKeyType(KeyType.HASH))
@@ -106,10 +107,16 @@ public class App {
             Map<String, AttributeValue> item = newItem("Vitalii Ielakov", "15:00");
             PutItemRequest putItemRequest = new PutItemRequest(tableName, item);
             PutItemResult putItemResult = dynamoDB.putItem(putItemRequest);
-            System.out.println("Result: " + putItemResult);
+            //System.out.println("Result: " + putItemResult);
 
             // Add another item
             item = newItem("Kopytsia Andrii", "10:30");
+            putItemRequest = new PutItemRequest(tableName, item);
+            putItemResult = dynamoDB.putItem(putItemRequest);
+            //System.out.println("Result: " + putItemResult);
+
+            // Add another item
+            item = newItem(KidName, KidTime);
             putItemRequest = new PutItemRequest(tableName, item);
             putItemResult = dynamoDB.putItem(putItemRequest);
             System.out.println("Result: " + putItemResult);
