@@ -5,6 +5,8 @@ import java.util.Map;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
+import com.amazonaws.services.lambda.runtime.Context;
+import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.regions.Region;
@@ -31,7 +33,7 @@ import com.amazonaws.services.dynamodbv2.util.TableUtils;
  * This sample demonstrates how to perform a few simple operations with the
  * Amazon DynamoDB service.
  */
-public class App {
+public class App implements RequestHandler<String, String> {
 
     /*
      * Before running the code:
@@ -146,7 +148,11 @@ public class App {
             System.out.println("Error Message: " + ace.getMessage());
         }
     }
-
+    public String handleRequest(String input, Context context) {
+        context.getLogger().log("Input: " + input);
+        String output = "Hello, " + input + "!";
+        return output;
+    }
     private static Map<String, AttributeValue> newItem(String name, String data) {
         Map<String, AttributeValue> item = new HashMap<String, AttributeValue>();
         item.put("name", new AttributeValue(name));
